@@ -1,6 +1,7 @@
 import Village from "../models/villageModel.js";
 import Taluka from "../models/talukaModel.js";
 import Counter from "../models/counterModel.js";
+import mongoose from "mongoose";
 import { generateVillageId } from "../utils/generateIds.js";
 
 
@@ -106,7 +107,42 @@ export const getVillageByTaluka = async (req, res) => {
   }
 };
 
+// ==========================
+// Get Villages by Taluka (Object  ID )
+// ==========================
+export const getVillageByTalukaObjectId = async (req, res) => {
+  try {
+    const { talukaObjectId } = req.params;
 
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(talukaObjectId)) {
+      return res.status(400).json({
+        message: "Invalid Taluka ObjectId"
+      });
+    }
+
+    const villages = await Village.find({
+      taluka: talukaObjectId
+    }).populate("taluka");
+
+    if (!villages.length) {
+      return res.status(404).json({
+        message: "No villages found for this taluka"
+      });
+    }
+
+    res.status(200).json({
+      message: "Villages fetched successfully",
+      data: villages
+    });
+
+  } catch (error) {
+    console.error("Error fetching villages by taluka ObjectId:", error);
+    res.status(500).json({
+      message: "Internal server error"
+    });
+  }
+};
 
 // ==========================
 // Update Village by villageId (string)

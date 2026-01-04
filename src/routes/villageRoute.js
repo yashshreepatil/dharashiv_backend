@@ -7,7 +7,8 @@ import {
   getVillageByTaluka,
   updateVillage,
   deleteVillage,
-  resetVillageCounter
+  resetVillageCounter,
+  getVillageByTalukaObjectId
 } from "../controllers/villageController.js";
 import { auth, adminOnly,superAdminOnly } from "../middlewares/authMiddleware.js";
 
@@ -21,6 +22,8 @@ router.get("/all",auth, getAllVillages);
 
 // Get By Taluka
 router.get("/by-taluka/:talukaId", auth, getVillageByTaluka);
+
+router.get("/by2-taluka/:talukaObjectId", auth, getVillageByTalukaObjectId);
 
 // Update Village
 router.put("/update/:villageId", auth, superAdminOnly, updateVillage);
